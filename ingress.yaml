@@ -1,10 +1,11 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: nginx-ingress
+  namespace: game-2048
+  name: ingress-2048
   annotations:
-    alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/target-type: instance # Specify IPv4 address
+    alb.ingress.kubernetes.io/scheme: internal
+    alb.ingress.kubernetes.io/target-type: instance
 spec:
   ingressClassName: alb
   rules:
@@ -14,6 +15,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: primuslearning
+            name: service-2048
             port:
               number: 80
