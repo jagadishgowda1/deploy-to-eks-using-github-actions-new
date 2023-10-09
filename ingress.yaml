@@ -3,13 +3,12 @@ kind: Ingress
 metadata:
   name: nginx-ingress
   annotations:
-    kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/ip-address-type: ipv4 # Specify IPv4 address
+    alb.ingress.kubernetes.io/target-type: instance # Specify IPv4 address
 spec:
+  ingressClassName: alb
   rules:
-  - host: example.com # Replace with your desired hostname
-    http:
+  - http:
       paths:
       - path: /
         pathType: Prefix
