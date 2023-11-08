@@ -1,5 +1,4 @@
-name: Node.js app deploy to EKS private cluster
-
+name: Node js app deploy to EKS private cluster
 on:
   push:
     branches: [ "main" ]
@@ -8,7 +7,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: self-hosted
+    runs-on: self-hosted   #ubuntu-latest
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
@@ -16,18 +15,23 @@ jobs:
     - name: Install kubectl
       uses: azure/setup-kubectl@v2.0
       with:
-        version: 'v1.24.0' # default is the latest stable
+        version: 'v1.24.0' # default is latest stable
       id: install
 
-    - name: Login to Amazon ECR, Build, tag, and push Docker image to Amazon ECR
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ap-south-1
+
+    - name: Login to Amazon ECR,Build, tag, and push docker image to Amazon ECR
       id: login-ecr
       run: |
-        # Use IAM role attached to the EC2 instance for authentication
-        $(aws ecr get-login --no-include-email --region ap-south-1 --registry-ids 737185589565)
-
+        aws ecr get-login-password --region ap-south-1 | sudo docker login --username AWS --password-stdin 737185589565.dkr.ecr.ap-south-1.amazonaws.com
         sudo docker build -t testpoc .
         sudo docker tag testpoc:latest 737185589565.dkr.ecr.ap-south-1.amazonaws.com/testpoc:latest
-        sudo docker push 737185589565.dkr.ecr.ap-south-1.amazonaws.com/testpoc:latest
+        sudo docker push 737185589565.dkr.ecr.ap-south-1.amazonaws.com/learning-test:1.1
 
     - name: Update kube config
       run: aws eks update-kubeconfig --name Testpoc
