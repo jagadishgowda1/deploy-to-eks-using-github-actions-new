@@ -7,7 +7,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: self-hosted   #ubuntu-latest
+    runs-on: ubuntu-latest  #self-hosted  
     permissions:
       id-token: write
       contents: read
@@ -32,8 +32,8 @@ jobs:
       run: |
         aws ecr get-login-password --region ap-south-1 | sudo docker login --username AWS --password-stdin 737185589565.dkr.ecr.ap-south-1.amazonaws.com
         sudo docker build -t testpoc .
-        sudo docker tag testpoc:latest 737185589565.dkr.ecr.ap-south-1.amazonaws.com/testpoc:latest-2
-        sudo docker push 737185589565.dkr.ecr.ap-south-1.amazonaws.com/testpoc:latest-2
+        sudo docker tag testpoc:latest 737185589565.dkr.ecr.ap-south-1.amazonaws.com/testpoc:latest-3
+        sudo docker push 737185589565.dkr.ecr.ap-south-1.amazonaws.com/testpoc:latest-3
 
     - name: Update kube config
       run: aws eks update-kubeconfig --name Testpoc
